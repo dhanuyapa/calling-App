@@ -69,4 +69,43 @@ const verifyOTP = async (req, res) => {
   }
 };
 
-module.exports = { registerCustomer, verifyOTP };
+
+// Resend OTP
+const resendOTP = async (req, res) => {
+  const { phoneNumber } = req.body;
+
+  // Validation: Ensure phoneNumber is provided
+  if (!phoneNumber) {
+    return res.status(400).json({ message: 'Phone number is required.' });
+  }
+
+  try {
+    // Find the customer by phone number
+    const customer = await Customer.findOne({ phoneNumber });
+
+    // If customer doesn't exist
+    if (!customer) {
+      return res.status(400).json({ message: 'Invalid phone number.' });
+    }
+
+    // Generate a new OTP and expiration time
+    const newOtp = generateOTP();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // OTP valid for 10 minutes
+
+    // Update the customer with the new OTP and expiration
+    customer.otp = newOtp;
+    customer.otpExpires = otpExpires;
+    await customer.save();
+
+    // Send the new OTP via SMS
+    const message = `Your new OTP is ${newOtp}. It will expire in 10 minutes.`;
+    sendSMS(phoneNumber, message);
+
+    return res.status(200).json({ message: 'New OTP has been sent to your mobile number.' });
+  } catch (error) {
+    console.error('Error resending OTP:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+module.exports = { registerCustomer, verifyOTP ,resendOTP };
