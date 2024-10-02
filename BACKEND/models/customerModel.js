@@ -10,7 +10,13 @@ const customerSchema = new Schema({
   phoneNumber: {
     type: String,
     required: true,
-    unique: true,  // Ensure the phone number is unique
+    unique: true,
+  },
+  otp: {
+    type: String,  // Store the OTP
+  },
+  otpExpires: {
+    type: Date,  // Store OTP expiration time
   },
   registeredAt: {
     type: Date,
@@ -18,7 +24,6 @@ const customerSchema = new Schema({
   },
 });
 
-// Define and export the Customer model
 const Customer = mongoose.model('Customer', customerSchema);
 
 module.exports = Customer;

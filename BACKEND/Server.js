@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const customerRoutes = require('./routes/customerRoute'); // Correct path for customer route
+const customerRoutes = require('./routes/customerRoute');
 
 dotenv.config();
 
@@ -15,19 +15,19 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Routes
-app.use('/api/customers', customerRoutes); // Correct path for customer route
+app.use('/api/customers', customerRoutes);
 
 // MongoDB Connection
-const URL = process.env.MONGODB_URL;
-
-mongoose.connect(URL, {
+mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB Connection Success!'))
-.catch(err => console.error('MongoDB connection error:', err));
+}).then(() => {
+  console.log('MongoDB connected successfully');
+}).catch(err => {
+  console.error('MongoDB connection error:', err);
+});
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on port: ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
