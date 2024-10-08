@@ -19,7 +19,7 @@ const registerCustomer = async (req, res) => {
 
     // Generate OTP and expiration time
     const otp = generateOTP();
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // OTP valid for 10 minutes
+    const otpExpires = new Date(Date.now() + 20  * 1000); // OTP valid for 10 minutes
 
     // Create a new customer
     const newCustomer = new Customer({
